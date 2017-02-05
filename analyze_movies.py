@@ -178,3 +178,6 @@ def filter(dict):
         i+=1
 index = filter(res)
 print res
+
+if __name__ == '__main__':
+    print(get_res(1))
