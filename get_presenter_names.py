@@ -11,11 +11,12 @@ def get_human_names(text):
     sentt = nltk.ne_chunk(pos, binary = False)
     person_list = []
     person = []
+    forbidden = ['Best','Golden','La','Drama','Academy','Wiki','Political','Actor','Picture']
     name = ""
     for subtree in sentt.subtrees(filter=lambda t: t.label() == 'PERSON'):
         for leaf in subtree.leaves():
             person.append(leaf[0])
-        if len(person) > 1: #avoid grabbing lone surnames
+        if len(person) > 1 and person[0] not in forbidden: #avoid grabbing lone surnames
             for part in person:
                 name += part + ' '
             if name[:-1] not in person_list:
@@ -48,7 +49,7 @@ def presenter_names():
     while 1:
         line = file.readline()
         count = 0
-        if pkw_search(pkw,line) and akw_search(akw,line):
+        if pkw_search(pkw,line):
             for name in get_human_names(line):
                     if name not in dic:
                         dic[name] =1
@@ -61,7 +62,7 @@ def presenter_names():
 res = presenter_names()
 res = sorted(res, key = lambda name: res[name], reverse = True)
 def filter(dict):
-    forbiddenlist = ["Best","Actor","Actress","Drama","Golden","Globe","Motion","Best"]
+    forbiddenlist = ['Best','Actor','Actress','Drama','Golden','Globe','Motion']
     i = 0
     while i < len(dict):
         j=0
@@ -72,9 +73,8 @@ def filter(dict):
         if j >= len(forbiddenlist):
             return i
         i+=1
-index = filter(res)
-print res
+final_list = filter(res)
 
 if __name__ == '__main__':
-    print(presenter_names())
+    print(res[:50])
         
